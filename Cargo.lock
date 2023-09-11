@@ -520,6 +520,7 @@ dependencies = [
  "clap",
  "ion-rs",
  "ion-schema",
+ "thiserror",
 ]
 
 [[package]]
