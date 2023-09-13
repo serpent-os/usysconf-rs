@@ -11,3 +11,7 @@ clap = "4.4.2"
 ion-rs = "0.18.1"
 ion-schema = "0.9.1"
 thiserror = "1.0.48"
+
+[[bin]]
+name = "usysconf"
+path = "src/bin/usysconf/main.rs"
