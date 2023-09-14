@@ -5,14 +5,7 @@ use std::io;
 use std::process::ExitStatus;
 use thiserror::Error;
 
-/// Env describes a special status the operating system
-/// may be in. Some Triggers are not allowed to run in certain
-/// environments.
-#[derive(Debug, Deserialize)]
-pub enum Env {
-    Chroot,
-    Live,
-}
+use crate::osenv::OsEnv;
 
 #[derive(Debug, Default, Deserialize)]
 /// Task is a work unit for a Trigger.
@@ -53,7 +46,7 @@ pub struct Trigger {
     pub paths: Vec<String>,
 
     /// List of environments in which this trigger won't run.
-    skip_envs: Vec<Env>,
+    skip_envs: Vec<OsEnv>,
 
     /// List of trigger names to be run before this trigger.
     deps: Vec<String>,
