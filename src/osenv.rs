@@ -10,7 +10,7 @@ const LIVE_FILE: &str = "/run/livedev";
 /// Env describes a special status the operating system may be in.
 #[derive(Debug, Deserialize)]
 pub enum OsEnv {
-    Chroot,
+    Container,
     Live,
 }
 
@@ -21,7 +21,7 @@ impl OsEnv {
 
     pub fn detect_from_root(root: &Path) -> io::Result<Option<Self>> {
         if Self::is_container(root)? {
-            return Ok(Some(Self::Chroot));
+            return Ok(Some(Self::Container));
         }
         if Self::is_live(root)? {
             return Ok(Some(Self::Live));
