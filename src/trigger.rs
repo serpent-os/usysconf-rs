@@ -1,6 +1,9 @@
+use async_process::{Child, Command};
 use serde::Deserialize;
+use std::fmt::Display;
 use std::io;
-use std::process::{Child, Command};
+use std::process::ExitStatus;
+use thiserror::Error;
 
 /// Env describes a special status the operating system
 /// may be in. Some Triggers are not allowed to run in certain
@@ -31,6 +34,16 @@ impl Task {
     }
 }
 
+impl Display for Task {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} ", self.binary)?;
+        for a in &self.args {
+            write!(f, "{}", a)?;
+        }
+        Ok(())
+    }
+}
+
 /// Trigger is a set of rules associated to a a list of paths.
 /// If allowed to run, Trigger will perform a set of tasks in response
 /// to the modified paths.
@@ -51,4 +64,54 @@ pub struct Trigger {
 
     /// Tasks that this trigger can perform.
     tasks: Vec<Task>,
+}
+
+impl Trigger {
+    pub fn run(&self) -> Result<(), Error> {
+        if self.tasks.is_empty() {
+            return Err(Error::NoTasks);
+        }
+        async_io::block_on(async {
+            if self.concurrent {
+                return self.run_parallel().await;
+            }
+            self.run_serial().await
+        })
+    }
+
+    async fn run_parallel(&self) -> Result<(), Error> {
+        let mut wait_list = Vec::with_capacity(self.tasks.len());
+        for t in &self.tasks {
+            wait_list.push(t.run()?.status());
+        }
+        let results = futures::prelude::future::try_join_all(wait_list).await?;
+        for r in results {
+            if !r.success() {
+                return Err(Error::TaskFailed(r));
+            }
+        }
+        Ok(())
+    }
+
+    async fn run_serial(&self) -> Result<(), Error> {
+        for t in &self.tasks {
+            let result = t.run()?.status().await?;
+            if !result.success() {
+                return Err(Error::TaskFailed(result));
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("there are no tasks specified for this trigger")]
+    NoTasks,
+
+    #[error("failed to spawn process")]
+    Io(#[from] io::Error),
+
+    #[error("task failed: {0}")]
+    TaskFailed(ExitStatus),
 }
