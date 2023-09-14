@@ -67,6 +67,10 @@ pub struct Trigger {
 }
 
 impl Trigger {
+    pub fn from_yaml(source: impl io::Read) -> Result<Self, Error> {
+        serde_yaml::from_reader(source).map_err(Error::from)
+    }
+
     pub fn run(&self) -> Result<(), Error> {
         if self.tasks.is_empty() {
             return Err(Error::NoTasks);
@@ -106,6 +110,9 @@ impl Trigger {
 
 #[derive(Debug, Error)]
 pub enum Error {
+    #[error("failed to deserialize trigger")]
+    Deserialization(#[from] serde_yaml::Error),
+
     #[error("there are no tasks specified for this trigger")]
     NoTasks,
 
