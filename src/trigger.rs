@@ -1,15 +1,16 @@
-use ion_rs::element::reader::ElementReader;
-use ion_rs::Reader;
+use serde::Deserialize;
 use thiserror::Error;
 
 /// Env describes a special status the operating system
 /// may be in. Some Triggers are not allowed to run in certain
 /// environments.
+#[derive(Debug, Deserialize)]
 pub enum Env {
     Chroot,
     Live,
 }
 
+#[derive(Debug, Deserialize)]
 /// Task is a work unit for a Trigger.
 pub struct Task {
     /// Textual description of what this task does.
@@ -25,6 +26,7 @@ pub struct Task {
 /// Trigger is a set of rules associated to a a list of paths.
 /// If allowed to run, Trigger will perform a set of tasks in response
 /// to the modified paths.
+#[derive(Debug, Deserialize)]
 pub struct Trigger {
     /// Lists of paths associated to this trigger.
     paths: Vec<String>,
@@ -37,17 +39,6 @@ pub struct Trigger {
 
     /// Tasks that this trigger can perform.
     tasks: Vec<Task>,
-}
-
-impl TryFrom<Reader<'_>> for Trigger {
-    type Error = Error;
-
-    fn try_from(mut reader: Reader) -> Result<Self, Self::Error> {
-        for element in reader.elements() {
-            todo!()
-        }
-        todo!()
-    }
 }
 
 #[derive(Error, Debug)]
