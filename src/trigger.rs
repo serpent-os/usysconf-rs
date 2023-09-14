@@ -45,8 +45,9 @@ pub struct Trigger {
     /// Lists of paths associated to this trigger.
     pub paths: Vec<String>,
 
-    /// List of environments in which this trigger won't run.
-    skip_envs: Vec<OsEnv>,
+    /// List of environments in which this trigger is forced to run.
+    /// Normally Triggers should not run in special environments.
+    force_envs: Vec<OsEnv>,
 
     /// List of trigger names to be run before this trigger.
     deps: Vec<String>,
