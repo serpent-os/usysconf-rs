@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-use usysconf::cli;
+mod cli;
+mod pathtimes;
 
 fn main() -> Result<(), cli::Error> {
     cli::process()
