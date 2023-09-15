@@ -9,5 +9,4 @@ library to incorporate into [moss-rs](https://github.com/serpent-os/moss-rs) - o
 
 ## License
 
-`moss-rs` is available under the terms of the [MPL-2.0](https://spdx.org/licenses/MPL-2.0.html)
-
+`usysconf-rs` is available under the terms of the [MPL-2.0](https://spdx.org/licenses/MPL-2.0.html)
