@@ -3,7 +3,7 @@ use std::io;
 use std::process::ExitStatus;
 
 use async_process::{Child, Command};
-use futures::prelude::*;
+use futures::{executor, prelude::*};
 use serde::Deserialize;
 use thiserror::Error;
 
@@ -71,7 +71,7 @@ impl Trigger {
         if self.tasks.is_empty() {
             return Err(Error::NoTasks);
         }
-        async_io::block_on(async {
+        executor::block_on(async {
             if self.concurrent {
                 return self.run_parallel().await;
             }
