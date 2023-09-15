@@ -4,8 +4,8 @@ use std::{fs, io};
 
 use serde::Deserialize;
 
-const ROOT_FILE: &str = "/proc/1/root";
-const LIVE_FILE: &str = "/run/livedev";
+const ROOT_FILE: &str = "proc/1/root";
+const LIVE_FILE: &str = "run/livedev";
 
 /// Env describes a special status the operating system may be in.
 #[derive(Debug, Deserialize)]
