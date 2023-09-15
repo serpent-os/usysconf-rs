@@ -1,8 +1,10 @@
-use async_process::{Child, Command};
-use serde::Deserialize;
 use std::fmt::Display;
 use std::io;
 use std::process::ExitStatus;
+
+use async_process::{Child, Command};
+use futures::prelude::*;
+use serde::Deserialize;
 use thiserror::Error;
 
 use crate::osenv::OsEnv;
@@ -78,11 +80,11 @@ impl Trigger {
     }
 
     async fn run_parallel(&self) -> Result<(), Error> {
-        let mut wait_list = Vec::with_capacity(self.tasks.len());
-        for t in &self.tasks {
-            wait_list.push(t.run()?.status());
-        }
-        let results = futures::prelude::future::try_join_all(wait_list).await?;
+        let future_results = self
+            .tasks
+            .iter()
+            .map(|task| async move { task.run()?.status().await });
+        let results = future::try_join_all(future_results).await?;
         for r in results {
             if !r.success() {
                 return Err(Error::TaskFailed(r));
