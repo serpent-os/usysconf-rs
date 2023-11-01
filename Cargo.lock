@@ -260,7 +260,7 @@ dependencies = [
 [[package]]
 name = "dag"
 version = "0.1.0"
-source = "git+https://github.com/serpent-os/moss-rs.git#e859a75cf96a2e0807ce37a2215d9459bc6c73f4"
+source = "git+https://github.com/serpent-os/moss-rs.git#58da164d6280b18717fa1762377fbc7d991308ad"
 dependencies = [
  "petgraph",
 ]
