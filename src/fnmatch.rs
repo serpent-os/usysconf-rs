@@ -116,9 +116,6 @@ impl Pattern {
 
 #[derive(Error, Debug)]
 pub enum PatternError {
-    #[error("lol")]
-    Basic,
-
     #[error("malformed: {0}")]
     String(#[from] Infallible),
 
