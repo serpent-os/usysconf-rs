@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright © 2020-2023 Serpent OS Developers
+//
+// SPDX-License-Identifier: MPL-2.0
+
 use std::fmt::Display;
 use std::io;
 use std::process::ExitStatus;

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: Copyright © 2020-2023 Serpent OS Developers
+//
+// SPDX-License-Identifier: MPL-2.0
+
 use std::os::linux::fs::MetadataExt;
 use std::path::Path;
 use std::{fs, io};
