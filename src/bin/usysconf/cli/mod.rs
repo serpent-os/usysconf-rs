@@ -2,21 +2,32 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-use clap::Command;
+use clap::{Parser, Subcommand};
 use thiserror::Error;
 
-/// Generate the CLI command structure
-fn command() -> Command {
-    Command::new("usysconf")
-        .about("Univeral system configuration")
-        .long_about("System configuration agent for modern Linux distributions to handle a variety of installation and removal triggers")
-        .arg_required_else_help(true)
+#[derive(Parser)]
+#[command(author, version = None)]
+#[command(about = "Universal system configuration")]
+#[command(long_about = "System configuration agent for modern linux distributions to handle a variety of installation and removal triggers")]
+#[command(arg_required_else_help = true)]
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
 }
+
+#[derive(Subcommand)]
+enum Commands {}
 
 /// Process CLI arguments for usysconf binary
 pub fn process() -> Result<(), Error> {
-    let _ = command().get_matches();
-    Err(Error::NotImplemented)
+    let cli = Cli::parse();
+
+    match &cli.command {
+        Some(_) => return Err(Error::NotImplemented),
+        None => {}
+    };
+
+    Ok(())
 }
 
 #[derive(Debug, Error)]
